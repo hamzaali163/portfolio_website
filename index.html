@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syed Hamza Ali — Flutter Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #02020a;
+  --bg2:      #04040f;
+  --surface:  #07071a;
+  --surface2: #0c0c22;
+  --border:   rgba(0,212,255,0.12);
+  --border2:  rgba(0,212,255,0.25);
+  --cyan:     #00d4ff;
+  --cyan-dim: rgba(0,212,255,0.12);
+  --violet:   #7c3aed;
+  --violet2:  #a855f7;
+  --green:    #00ff88;
+  --text:     #e2e8f0;
+  --muted:    #4a5568;
+  --muted2:   #718096;
+  --glow-c:   rgba(0,212,255,0.35);
+  --glow-v:   rgba(124,58,237,0.35);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none}
+
+/* --- CURSOR --- */
+#cur-dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;position:fixed;z-index:9999;pointer-events:none;box-shadow:0 0 10px var(--cyan),0 0 20px var(--glow-c);transition:transform .1s}
+#cur-ring{width:40px;height:40px;border:1px solid rgba(0,212,255,.5);border-radius:50%;position:fixed;z-index:9998;pointer-events:none;transition:all .14s ease}
+#cur-dot.hov{transform:scale(0)}
+#cur-ring.hov{width:60px;height:60px;border-color:var(--cyan);background:rgba(0,212,255,.05)}
+
+/* --- STARFIELD --- */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* --- OVERLAYS --- */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);pointer-events:none;z-index:200;animation:scanMove 10s linear infinite}
+@keyframes scanMove{to{background-position:0 400px}}
+.grid-ovl{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:80px 80px}
+.grid-ovl::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(0,212,255,.06) 0%,transparent 70%)}
+
+/* --- NAV --- */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:0 60px;height:70px;border-bottom:1px solid var(--border);backdrop-filter:blur(24px) saturate(1.5);background:rgba(2,2,10,.8)}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:700;font-size:.9rem;letter-spacing:.12em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-brk{color:var(--cyan)}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:dotPulse 2s ease infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 8px var(--cyan),0 0 18px var(--glow-c)}50%{box-shadow:0 0 3px var(--cyan)}}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);text-decoration:none;position:relative;transition:color .3s;font-family:'JetBrains Mono',monospace}
+.nav-links a::before{content:'_';position:absolute;left:-10px;color:var(--cyan);opacity:0;transition:opacity .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan)}
+.nav-links a:hover::before,.nav-links a.active::before{opacity:1}
+.nav-cta{padding:8px 22px;border:1px solid var(--border2);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-decoration:none;transition:all .3s;position:relative;overflow:hidden}
+.nav-cta::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;z-index:-1}
+.nav-cta:hover{color:var(--bg)}
+.nav-cta:hover::before{transform:scaleX(1)}
+
+/* --- HERO --- */
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:70px 60px 0;overflow:hidden}
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(100px)}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,255,.12) 0%,transparent 65%);top:-200px;right:-100px;animation:o1Float 12s ease-in-out infinite}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,.15) 0%,transparent 65%);bottom:0;left:-100px;animation:o2Float 9s ease-in-out infinite}
+@keyframes o1Float{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+@keyframes o2Float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+
+.hero-status{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;color:var(--muted2);text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .8s ease forwards .4s}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:statusBlink 2.5s ease infinite}
+@keyframes statusBlink{0%,100%{opacity:1}50%{opacity:.4}}
+
+.hero-name{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(2.8rem,6.5vw,6.5rem);line-height:1;letter-spacing:-.01em;margin-bottom:8px;opacity:0;animation:fadeUp .8s ease forwards .6s}
+.hero-name .first{display:block;color:var(--text)}
+.hero-name .last{display:block;color:transparent;-webkit-text-stroke:1px var(--cyan);position:relative}
+.hero-name .last .ghost{position:absolute;top:0;left:0;color:var(--cyan);filter:blur(22px);opacity:.3;pointer-events:none;-webkit-text-stroke:0}
+
+.hero-title{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--cyan);letter-spacing:.08em;margin-bottom:28px;opacity:0;animation:fadeUp .8s ease forwards .8s}
+.hero-title span{color:var(--violet2)}
+
+.hero-desc{max-width:520px;font-size:.9rem;color:var(--muted2);line-height:1.85;margin-bottom:44px;opacity:0;animation:fadeUp .8s ease forwards 1s}
+
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s ease forwards 1.2s}
+.btn-g{padding:14px 36px;border:1px solid var(--cyan);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;position:relative;overflow:hidden;transition:color .3s;display:inline-block}
+.btn-g::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:translateX(-100%);transition:transform .3s ease;z-index:-1}
+.btn-g:hover{color:var(--bg)}
+.btn-g:hover::before{transform:translateX(0)}
+.btn-g.solid{background:var(--cyan);color:var(--bg)}
+.btn-g.solid::before{background:var(--violet)}
+.btn-g.solid:hover{color:var(--text)}
+
+/* Terminal */
+.hero-terminal{position:absolute;right:60px;top:50%;transform:translateY(-50%);width:340px;opacity:0;animation:termIn 1s ease forwards 1.4s}
+@keyframes termIn{from{opacity:0;transform:translateY(-50%) translateX(40px)}to{opacity:1;transform:translateY(-50%) translateX(0)}}
+.term-win{background:rgba(7,7,26,.92);border:1px solid var(--border2);border-radius:10px;overflow:hidden;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(0,212,255,.08),0 30px 60px rgba(0,0,0,.7)}
+.term-bar{background:var(--surface2);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.td{width:10px;height:10px;border-radius:50%}
+.td1{background:#ff5f57}.td2{background:#ffbe2e}.td3{background:#28ca41}
+.term-ttl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em;margin-left:auto}
+.term-body{padding:20px;font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:2}
+.t-cmd{color:var(--cyan)}.t-out{color:var(--muted2)}.t-ok{color:var(--green)}.t-acc{color:var(--violet2)}
+.t-cur{display:inline-block;width:8px;height:13px;background:var(--cyan);vertical-align:middle;animation:tBlink 1s step-end infinite}
+@keyframes tBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Hero bottom */
+.hero-bottom{position:absolute;bottom:30px;left:60px;right:60px;display:flex;justify-content:space-between;align-items:flex-end;opacity:0;animation:fadeUp 1s ease forwards 1.6s}
+.hero-stats{display:flex;gap:48px}
+.stat-val{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:700;color:var(--text);display:block;line-height:1}
+.stat-val .ac{color:var(--cyan)}
+.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block}
+.scroll-hint{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.scroll-arr{display:flex;flex-direction:column;gap:2px;animation:aBounce 2s ease infinite}
+.scroll-arr span{display:block;width:12px;height:1px;background:var(--muted);transform-origin:left}
+.scroll-arr span:nth-child(1){transform:rotate(45deg) translateY(-4px)}
+.scroll-arr span:nth-child(2){transform:rotate(-45deg) translateY(4px)}
+@keyframes aBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* --- TICKER --- */
+.ticker-band{position:relative;z-index:1;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;overflow:hidden}
+.ticker-track{display:flex;width:max-content;animation:tickMove 28s linear infinite}
+.ticker-item{padding:0 32px;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;display:flex;align-items:center;gap:12px}
+.ticker-item::after{content:'◈';color:var(--cyan);font-size:.5rem}
+@keyframes tickMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* --- SECTION BASE --- */
+section{position:relative;z-index:1;padding:120px 60px}
+.sec-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.sec-eyebrow::before{content:'//';color:var(--muted)}
+.sec-title{font-family:'Orbitron',monospace;font-weight:800;font-size:clamp(2rem,4.5vw,3.5rem);letter-spacing:-.01em;line-height:1.1;color:var(--text);margin-bottom:0}
+.sec-title .hl{color:var(--cyan)}
+.sec-header{margin-bottom:70px}
+.sec-deco{position:absolute;top:60px;right:60px;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;color:rgba(0,212,255,.18);pointer-events:none;user-select:none}
+
+/* --- ABOUT --- */
+#about{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start}
+.about-text-block p{font-size:.88rem;color:var(--muted2);line-height:1.95;margin-bottom:16px}
+.about-text-block p strong{color:var(--text);font-weight:600}
+.about-text-block p .hl{color:var(--cyan)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.chip{padding:5px 14px;background:var(--surface);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.08em;color:var(--muted2);transition:all .25s}
+.chip:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim)}
+
+.profile-hud{background:var(--surface);border:1px solid var(--border2);padding:32px;position:relative;overflow:hidden}
+.profile-hud::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--cyan),var(--violet));background-size:200% auto;animation:bFlow 3s linear infinite}
+@keyframes bFlow{0%{background-position:0% center}100%{background-position:200% center}}
+.hud-corner{position:absolute;width:16px;height:16px;border-color:var(--cyan);border-style:solid}
+.hc-tl{top:8px;left:8px;border-width:2px 0 0 2px}
+.hc-tr{top:8px;right:8px;border-width:2px 2px 0 0}
+.hc-bl{bottom:8px;left:8px;border-width:0 0 2px 2px}
+.hc-br{bottom:8px;right:8px;border-width:0 2px 2px 0}
+.hud-name{font-family:'Orbitron',monospace;font-weight:700;font-size:.85rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:4px}
+.hud-role{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted2);letter-spacing:.1em;margin-bottom:24px}
+.hud-div{height:1px;background:var(--border);margin:20px 0}
+.hud-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,212,255,.06)}
+.hud-row:last-of-type{border-bottom:none}
+.hud-key{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.08em;color:var(--muted)}
+.hud-val{font-size:.78rem;font-weight:500;color:var(--text)}
+.hud-val.cyan{color:var(--cyan)}
+.hud-val.green{color:var(--green)}
+.hud-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.hud-bar-lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted2);width:120px;flex-shrink:0}
+.hud-bar-track{flex:1;height:3px;background:rgba(0,212,255,.1);position:relative;overflow:hidden}
+.hud-bar-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));transform:scaleX(0);transform-origin:left;transition:transform 1.4s cubic-bezier(.4,0,.2,1)}
+.hud-bar-pct{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--cyan);width:32px;text-align:right;flex-shrink:0}
+
+/* --- SKILLS --- */
+#skills{background:var(--bg)}
+.skills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--border)}
+.skill-tile{background:var(--surface);padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;overflow:hidden;transition:background .3s;text-align:center}
+.skill-tile::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,212,255,.1) 0%,transparent 70%);opacity:0;transition:opacity .4s}
+.skill-tile:hover{background:var(--surface2)}
+.skill-tile:hover::before{opacity:1}
+.skill-tile:hover .sk-icon-wrap{border-color:var(--cyan);box-shadow:0 0 20px var(--glow-c)}
+.sk-icon-wrap{width:56px;height:56px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .3s}
+.sk-name{font-family:'Orbitron',monospace;font-size:.58rem;font-weight:600;letter-spacing:.08em;color:var(--text)}
+.sk-cat{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.sk-lvl{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--cyan);letter-spacing:.08em}
+
+/* --- PROJECTS --- */
+#projects{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.projects-layout{display:flex;flex-direction:column;gap:2px;background:var(--border)}
+.proj-row{background:var(--surface);display:grid;grid-template-columns:1fr 1.4fr;overflow:hidden;transition:background .3s;position:relative}
+.proj-row:nth-child(even){grid-template-columns:1.4fr 1fr}
+.proj-row:nth-child(even) .proj-vis{order:-1}
+.proj-row:hover{background:var(--surface2)}
+
+.proj-info{padding:52px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+.proj-row:nth-child(even) .proj-info{border-right:none;border-left:1px solid var(--border)}
+.proj-num{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;color:var(--muted);margin-bottom:20px}
+.proj-num span{color:var(--cyan)}
+.proj-title{font-family:'Orbitron',monospace;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px}
+.proj-desc{font-size:.85rem;color:var(--muted2);line-height:1.85;margin-bottom:28px}
+.proj-tech{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.tech-tag{padding:4px 12px;background:var(--cyan-dim);border:1px solid rgba(0,212,255,.2);font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:var(--cyan)}
+.proj-actions{display:flex;gap:16px}
+.proj-link{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:8px;transition:gap .25s}
+.proj-link.primary{color:var(--cyan)}
+.proj-link.secondary{color:var(--muted2)}
+.proj-link:hover{gap:14px}
+.proj-link.secondary:hover{color:var(--text)}
+
+.proj-vis{position:relative;min-height:380px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vis-bg{position:absolute;inset:0}
+.vis-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px);background-size:40px 40px}
+.phone-frame{width:130px;background:var(--bg);border-radius:22px;padding:8px;border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.7);position:relative;z-index:2;transform:perspective(600px) rotateY(-8deg) rotateX(4deg);transition:transform .5s ease}
+.proj-row:hover .phone-frame{transform:perspective(600px) rotateY(0) rotateX(0)}
+.phone-notch{width:40px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin:0 auto 8px}
+.phone-screen{border-radius:16px;height:220px;overflow:hidden;position:relative}
+.ps-bar{height:32px;display:flex;align-items:center;padding:0 10px;gap:4px}
+.ps-bar i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15)}
+.ps-content{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.ps-row{height:7px;border-radius:3px;background:rgba(255,255,255,.07)}
+.ps-row.c{width:70%}
+.ps-row.a{background:rgba(0,212,255,.3);width:85%}
+.ps-img{height:60px;border-radius:6px;margin:4px 0}
+.ps-btn{height:22px;border-radius:4px;background:rgba(0,212,255,.25);width:60%;margin-top:4px}
+.hud-chip{position:absolute;padding:8px 14px;background:rgba(7,7,26,.9);border:1px solid var(--border2);font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--cyan);letter-spacing:.08em;backdrop-filter:blur(10px);z-index:3}
+.hc1{top:24px;right:24px}
+.hc2{bottom:24px;left:24px}
+
+/* --- CONTACT --- */
+#contact{background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.contact-tagline{font-size:.88rem;color:var(--muted2);line-height:1.9;margin-bottom:40px}
+.c-links{display:flex;flex-direction:column;gap:0}
+.c-link-row{display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--muted2);transition:all .3s;font-size:.85rem}
+.c-link-row:first-child{border-top:1px solid var(--border)}
+.c-link-row:hover{color:var(--cyan);padding-left:12px}
+.cl-icon{width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;transition:border-color .3s}
+.c-link-row:hover .cl-icon{border-color:var(--cyan)}
+.cl-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.cl-arr{margin-left:auto;transition:transform .25s}
+.c-link-row:hover .cl-arr{transform:translateX(6px)}
+
+.contact-form{background:var(--surface);border:1px solid var(--border);padding:40px;position:relative}
+.contact-form::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.form-group{margin-bottom:24px}
+.form-label{display:block;font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:8px}
+.form-input,.form-textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:12px 16px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s,box-shadow .3s;resize:none}
+.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.08)}
+.form-textarea{height:120px}
+.form-submit{width:100%;padding:16px;background:var(--cyan);border:none;color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;cursor:none;transition:all .3s;position:relative;overflow:hidden}
+.form-submit::before{content:'';position:absolute;inset:0;background:var(--violet);transform:translateX(-100%);transition:transform .3s ease}
+.form-submit:hover::before{transform:translateX(0)}
+.form-submit span{position:relative;z-index:1;color:inherit}
+.form-submit:hover span{color:var(--text)}
+
+/* --- FOOTER --- */
+footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid var(--border);padding:32px 60px;display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:'Orbitron',monospace;font-size:.75rem;font-weight:700;color:var(--cyan);letter-spacing:.12em}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--muted)}
+.footer-back{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .3s}
+.footer-back:hover{color:var(--cyan)}
+
+/* --- REVEAL --- */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+.rv1{transition-delay:.1s}
+.rv2{transition-delay:.2s}
+.rv3{transition-delay:.3s}
+.rv4{transition-delay:.4s}
+
+/* --- RESPONSIVE --- */
+@media(max-width:1100px){.skills-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){
+  nav{padding:0 24px}
+  nav .nav-links,.nav-cta{display:none}
+  section{padding:80px 24px}
+  #hero{padding:70px 24px 0}
+  .hero-terminal{display:none}
+  .hero-bottom{left:24px;right:24px}
+  .hero-stats{gap:24px}
+  .about-grid{grid-template-columns:1fr;gap:40px}
+  .skills-grid{grid-template-columns:repeat(2,1fr)}
+  .proj-row,.proj-row:nth-child(even){grid-template-columns:1fr}
+  .proj-row:nth-child(even) .proj-vis{order:0}
+  .proj-info{padding:32px 28px;border-right:none!important;border-left:none!important;border-bottom:1px solid var(--border)}
+  .contact-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:14px;text-align:center;padding:24px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<div class="grid-ovl"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <span class="logo-brk">[</span>SHA<span class="logo-brk">]</span>
+    <span class="logo-dot"></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+
+  <div class="hero-status">
+    <span class="status-dot"></span>
+    Available for projects — Flutter Developer
+  </div>
+
+  <h1 class="hero-name">
+    <span class="first">Syed Hamza</span>
+    <span class="last">Ali<span class="ghost" aria-hidden="true">Ali</span></span>
+  </h1>
+
+  <div class="hero-title">
+    &lt;<span>Flutter</span> Developer /&gt; &nbsp;·&nbsp; &lt;<span>Mobile</span> Engineer /&gt;
+  </div>
+
+  <p class="hero-desc">
+    Crafting pixel-perfect, high-performance cross-platform apps with Flutter &amp; Dart.
+    I turn complex ideas into seamless mobile experiences — shipped to millions.
+  </p>
+
+  <div class="hero-btns">
+    <a href="#projects" class="btn-g solid">View My Work</a>
+    <a href="#contact" class="btn-g">Get In Touch</a>
+  </div>
+
+  <div class="hero-terminal">
+    <div class="term-win">
+      <div class="term-bar">
+        <span class="td td1"></span><span class="td td2"></span><span class="td td3"></span>
+        <span class="term-ttl">hamza@flutter ~ zsh</span>
+      </div>
+      <div class="term-body">
+        <div><span class="t-cmd">$</span> <span class="t-out">flutter doctor</span></div>
+        <div class="t-ok">✔ Flutter SDK (3.24.0)</div>
+        <div class="t-ok">✔ Android toolchain</div>
+        <div class="t-ok">✔ Xcode (iOS 17.x)</div>
+        <div class="t-ok">✔ VS Code extensions</div>
+        <div style="margin-top:10px"><span class="t-cmd">$</span> <span class="t-out">dart pub get</span></div>
+        <div class="t-acc">Resolving dependencies...</div>
+        <div class="t-ok">Got 47 packages.</div>
+        <div style="margin-top:10px"><span class="t-cmd">$</span> <span class="t-out">flutter run --release</span></div>
+        <div class="t-acc">Building APK &amp; IPA...</div>
+        <div class="t-ok">✔ App launched successfully</div>
+        <div><span class="t-cmd">$ </span><span class="t-cur"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-stats">
+      <div>
+        <span class="stat-val"><span class="counter" data-target="25">0</span><span class="ac">+</span></span>
+        <span class="stat-lbl">Apps Shipped</span>
+      </div>
+      <div>
+        <span class="stat-val"><span class="counter" data-target="3">0</span><span class="ac">+</span></span>
+        <span class="stat-lbl">Years Exp.</span>
+      </div>
+      <div>
+        <span class="stat-val"><span class="counter" data-target="1">0</span><span class="ac">M+</span></span>
+        <span class="stat-lbl">Downloads</span>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      Scroll
+      <div class="scroll-arr"><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-band">
+  <div class="ticker-track">
+    <span class="ticker-item">Flutter 3.x</span><span class="ticker-item">Dart 3</span><span class="ticker-item">Firebase</span><span class="ticker-item">BLoC Pattern</span><span class="ticker-item">Riverpod</span><span class="ticker-item">GetX</span><span class="ticker-item">REST APIs</span><span class="ticker-item">GraphQL</span><span class="ticker-item">Clean Architecture</span><span class="ticker-item">CI / CD</span><span class="ticker-item">iOS &amp; Android</span><span class="ticker-item">App Store</span>
+    <span class="ticker-item">Flutter 3.x</span><span class="ticker-item">Dart 3</span><span class="ticker-item">Firebase</span><span class="ticker-item">BLoC Pattern</span><span class="ticker-item">Riverpod</span><span class="ticker-item">GetX</span><span class="ticker-item">REST APIs</span><span class="ticker-item">GraphQL</span><span class="ticker-item">Clean Architecture</span><span class="ticker-item">CI / CD</span><span class="ticker-item">iOS &amp; Android</span><span class="ticker-item">App Store</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <span class="sec-deco">// ABOUT.DART</span>
+  <div class="about-grid">
+    <div>
+      <div class="sec-header reveal">
+        <div class="sec-eyebrow">About Me</div>
+        <h2 class="sec-title">Turning ideas into<br><span class="hl">beautiful</span> apps</h2>
+      </div>
+      <div class="about-text-block reveal rv1">
+        <p>I'm <strong>Syed Hamza Ali</strong>, a passionate <span class="hl">Flutter developer</span> dedicated to building delightful, high-performance cross-platform mobile applications that users love.</p>
+        <p>With <strong>3+ years</strong> of hands-on Flutter experience, I've shipped production apps across e-commerce, health-tech, fintech, and social platforms — serving real users at scale.</p>
+        <p>I obsess over <strong>pixel-perfect UI</strong>, smooth 60fps animations, and clean, maintainable architecture. Great software lives where engineering precision meets thoughtful design.</p>
+        <div class="chips">
+          <span class="chip">Flutter 3.x</span><span class="chip">Dart 3</span><span class="chip">Firebase</span><span class="chip">BLoC / Cubit</span><span class="chip">Riverpod</span><span class="chip">GetX</span><span class="chip">Hive / SQLite</span><span class="chip">REST APIs</span><span class="chip">GraphQL</span><span class="chip">Fastlane</span><span class="chip">GitHub Actions</span><span class="chip">Figma</span>
+        </div>
+      </div>
+    </div>
+    <div class="reveal rv2">
+      <div class="profile-hud">
+        <div class="hud-corner hc-tl"></div><div class="hud-corner hc-tr"></div>
+        <div class="hud-corner hc-bl"></div><div class="hud-corner hc-br"></div>
+        <div class="hud-name">SYED HAMZA ALI</div>
+        <div class="hud-role">// Flutter Developer &amp; Mobile Engineer</div>
+        <div class="hud-row"><span class="hud-key">STATUS</span><span class="hud-val green">● Available</span></div>
+        <div class="hud-row"><span class="hud-key">EXPERIENCE</span><span class="hud-val">3+ Years</span></div>
+        <div class="hud-row"><span class="hud-key">APPS SHIPPED</span><span class="hud-val cyan">25+</span></div>
+        <div class="hud-row"><span class="hud-key">PLATFORM</span><span class="hud-val">iOS · Android · Web</span></div>
+        <div class="hud-row"><span class="hud-key">SPECIALTY</span><span class="hud-val">UI · Architecture</span></div>
+        <div class="hud-div"></div>
+        <div class="hud-bar-row"><span class="hud-bar-lbl">Flutter / Dart</span><div class="hud-bar-track"><div class="hud-bar-fill" data-w="96"></div></div><span class="hud-bar-pct">96%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-lbl">State Management</span><div class="hud-bar-track"><div class="hud-bar-fill" data-w="92"></div></div><span class="hud-bar-pct">92%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-lbl">Firebase</span><div class="hud-bar-track"><div class="hud-bar-fill" data-w="88"></div></div><span class="hud-bar-pct">88%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-lbl">UI / Animations</span><div class="hud-bar-track"><div class="hud-bar-fill" data-w="94"></div></div><span class="hud-bar-pct">94%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-lbl">CI / CD</span><div class="hud-bar-track"><div class="hud-bar-fill" data-w="80"></div></div><span class="hud-bar-pct">80%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <span class="sec-deco">// SKILLS.DART</span>
+  <div class="sec-header reveal">
+    <div class="sec-eyebrow">Tech Stack</div>
+    <h2 class="sec-title">Tools &amp; <span class="hl">Technologies</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-tile reveal"><div class="sk-icon-wrap">📱</div><div class="sk-name">FLUTTER</div><div class="sk-cat">Framework</div><div class="sk-lvl">Expert</div></div>
+    <div class="skill-tile reveal rv1"><div class="sk-icon-wrap">🎯</div><div class="sk-name">DART</div><div class="sk-cat">Language</div><div class="sk-lvl">Expert</div></div>
+    <div class="skill-tile reveal rv2"><div class="sk-icon-wrap">🔥</div><div class="sk-name">FIREBASE</div><div class="sk-cat">Backend</div><div class="sk-lvl">Advanced</div></div>
+    <div class="skill-tile reveal rv3"><div class="sk-icon-wrap">🧩</div><div class="sk-name">BLOC / CUBIT</div><div class="sk-cat">State</div><div class="sk-lvl">Expert</div></div>
+    <div class="skill-tile reveal"><div class="sk-icon-wrap">⚡</div><div class="sk-name">RIVERPOD</div><div class="sk-cat">State</div><div class="sk-lvl">Advanced</div></div>
+    <div class="skill-tile reveal rv1"><div class="sk-icon-wrap">🔗</div><div class="sk-name">REST API</div><div class="sk-cat">Networking</div><div class="sk-lvl">Expert</div></div>
+    <div class="skill-tile reveal rv2"><div class="sk-icon-wrap">🛢️</div><div class="sk-name">HIVE / SQLITE</div><div class="sk-cat">Storage</div><div class="sk-lvl">Advanced</div></div>
+    <div class="skill-tile reveal rv3"><div class="sk-icon-wrap">🚀</div><div class="sk-name">CI / CD</div><div class="sk-cat">DevOps</div><div class="sk-lvl">Advanced</div></div>
+    <div class="skill-tile reveal"><div class="sk-icon-wrap">🍎</div><div class="sk-name">APP STORE</div><div class="sk-cat">Deployment</div><div class="sk-lvl">Expert</div></div>
+    <div class="skill-tile reveal rv1"><div class="sk-icon-wrap">🤖</div><div class="sk-name">PLAY STORE</div><div class="sk-cat">Deployment</div><div class="sk-lvl">Expert</div></div>
+    <div class="skill-tile reveal rv2"><div class="sk-icon-wrap">🎨</div><div class="sk-name">FIGMA</div><div class="sk-cat">Design</div><div class="sk-lvl">Proficient</div></div>
+    <div class="skill-tile reveal rv3"><div class="sk-icon-wrap">🐙</div><div class="sk-name">GIT</div><div class="sk-cat">VCS</div><div class="sk-lvl">Expert</div></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <span class="sec-deco">// PROJECTS.DART</span>
+  <div class="sec-header reveal">
+    <div class="sec-eyebrow">Featured Work</div>
+    <h2 class="sec-title">Selected <span class="hl">Projects</span></h2>
+  </div>
+  <div class="projects-layout">
+
+    <!-- P1 -->
+    <div class="proj-row reveal">
+      <div class="proj-info">
+        <div class="proj-num">PROJECT <span>01</span> / 03</div>
+        <div class="proj-title">E-Commerce Platform</div>
+        <p class="proj-desc">A full-featured shopping app with real-time cart sync, Firebase Auth, Stripe payments, custom animations, and an offline-first architecture. Featured on the Play Store with 50K+ downloads.</p>
+        <div class="proj-tech">
+          <span class="tech-tag">Flutter</span><span class="tech-tag">Firebase</span><span class="tech-tag">BLoC</span><span class="tech-tag">Stripe</span><span class="tech-tag">Hive</span>
+        </div>
+        <div class="proj-actions">
+          <a href="#" class="proj-link primary">Live App →</a>
+          <a href="#" class="proj-link secondary">View Code →</a>
+        </div>
+      </div>
+      <div class="proj-vis">
+        <div class="vis-bg" style="background:linear-gradient(135deg,#040414,#0f0830)"></div>
+        <div class="vis-grid"></div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:#0a0820">
+            <div class="ps-bar" style="background:#120f35"><i></i><i></i><i></i></div>
+            <div class="ps-content">
+              <div class="ps-row a"></div><div class="ps-row c"></div>
+              <div class="ps-img" style="background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(0,212,255,.15))"></div>
+              <div class="ps-row"></div><div class="ps-row c"></div><div class="ps-btn"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hud-chip hc1">50K+ Downloads</div>
+        <div class="hud-chip hc2">60fps · Offline-first</div>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="proj-row reveal rv1">
+      <div class="proj-info">
+        <div class="proj-num">PROJECT <span>02</span> / 03</div>
+        <div class="proj-title">Health &amp; Fitness Tracker</div>
+        <p class="proj-desc">A daily health metrics app featuring custom chart widgets built with CustomPainter, local notifications, Riverpod state management, and a powerful dark UI design system. Featured by Google.</p>
+        <div class="proj-tech">
+          <span class="tech-tag">Flutter</span><span class="tech-tag">Riverpod</span><span class="tech-tag">CustomPainter</span><span class="tech-tag">SQLite</span><span class="tech-tag">FCM</span>
+        </div>
+        <div class="proj-actions">
+          <a href="#" class="proj-link primary">Live App →</a>
+          <a href="#" class="proj-link secondary">View Code →</a>
+        </div>
+      </div>
+      <div class="proj-vis">
+        <div class="vis-bg" style="background:linear-gradient(135deg,#040d14,#001825)"></div>
+        <div class="vis-grid"></div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:#040d14">
+            <div class="ps-bar" style="background:#061520"><i></i><i></i><i></i></div>
+            <div class="ps-content">
+              <div class="ps-row" style="background:rgba(0,212,255,.3);width:80%"></div>
+              <div class="ps-img" style="background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(0,255,136,.1));display:flex;align-items:flex-end;padding:6px">
+                <div style="display:flex;align-items:flex-end;gap:4px;width:100%">
+                  <div style="flex:1;height:30px;background:rgba(0,212,255,.25);border-radius:2px 2px 0 0"></div>
+                  <div style="flex:1;height:40px;background:rgba(0,212,255,.4);border-radius:2px 2px 0 0"></div>
+                  <div style="flex:1;height:25px;background:rgba(0,212,255,.2);border-radius:2px 2px 0 0"></div>
+                  <div style="flex:1;height:45px;background:rgba(0,255,136,.5);border-radius:2px 2px 0 0"></div>
+                  <div style="flex:1;height:35px;background:rgba(0,212,255,.3);border-radius:2px 2px 0 0"></div>
+                </div>
+              </div>
+              <div class="ps-row c"></div><div class="ps-row"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hud-chip hc1">Featured by Google</div>
+        <div class="hud-chip hc2">Custom Chart Widgets</div>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="proj-row reveal rv2">
+      <div class="proj-info">
+        <div class="proj-num">PROJECT <span>03</span> / 03</div>
+        <div class="proj-title">Real-Time Chat App</div>
+        <p class="proj-desc">A full-featured social messaging app with WebSocket real-time messaging, end-to-end encryption, media sharing, stories, and push notifications via Firebase Cloud Messaging.</p>
+        <div class="proj-tech">
+          <span class="tech-tag">Flutter</span><span class="tech-tag">WebSocket</span><span class="tech-tag">GetX</span><span class="tech-tag">Firebase</span><span class="tech-tag">E2E Encryption</span>
+        </div>
+        <div class="proj-actions">
+          <a href="#" class="proj-link primary">Live App →</a>
+          <a href="#" class="proj-link secondary">View Code →</a>
+        </div>
+      </div>
+      <div class="proj-vis">
+        <div class="vis-bg" style="background:linear-gradient(135deg,#0a0414,#160028)"></div>
+        <div class="vis-grid"></div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="background:#0a0414">
+            <div class="ps-bar" style="background:#120820"><i></i><i></i><i></i></div>
+            <div class="ps-content">
+              <div class="ps-row" style="background:rgba(168,85,247,.35);width:65%"></div>
+              <div style="display:flex;flex-direction:column;gap:6px;margin:6px 0">
+                <div style="display:flex;gap:4px;align-items:flex-end">
+                  <div style="width:20px;height:20px;border-radius:50%;background:rgba(168,85,247,.3)"></div>
+                  <div style="padding:5px 8px;background:rgba(168,85,247,.15);border-radius:0 6px 6px 6px;font-size:.55rem;color:rgba(168,85,247,.9);font-family:'JetBrains Mono',monospace">Hey! 👋</div>
+                </div>
+                <div style="display:flex;gap:4px;align-items:flex-end;justify-content:flex-end">
+                  <div style="padding:5px 8px;background:rgba(0,212,255,.15);border-radius:6px 0 6px 6px;font-size:.55rem;color:rgba(0,212,255,.9);font-family:'JetBrains Mono',monospace">Hi there! 🚀</div>
+                </div>
+                <div style="display:flex;gap:4px;align-items:flex-end">
+                  <div style="width:20px;height:20px;border-radius:50%;background:rgba(168,85,247,.3)"></div>
+                  <div style="padding:5px 8px;background:rgba(168,85,247,.15);border-radius:0 6px 6px 6px;font-size:.55rem;color:rgba(168,85,247,.9);font-family:'JetBrains Mono',monospace">Let's build something! ✨</div>
+                </div>
+              </div>
+              <div class="ps-row c"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hud-chip hc1">E2E Encrypted</div>
+        <div class="hud-chip hc2">Real-time WebSocket</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <span class="sec-deco">// CONTACT.DART</span>
+  <div class="contact-grid">
+    <div>
+      <div class="sec-header reveal">
+        <div class="sec-eyebrow">Contact</div>
+        <h2 class="sec-title">Let's build<br><span class="hl">something great</span></h2>
+      </div>
+      <p class="contact-tagline reveal rv1">Have an app idea? Looking for a Flutter developer? I'm open to freelance projects, full-time roles, and exciting collaborations. Let's connect.</p>
+      <div class="c-links reveal rv2">
+        <a href="mailto:hamza@example.com" class="c-link-row">
+          <div class="cl-icon">✉</div>
+          <div><div class="cl-label">Email</div><div style="font-size:.85rem">hamza@example.com</div></div>
+          <span class="cl-arr">→</span>
+        </a>
+        <a href="https://linkedin.com" class="c-link-row" target="_blank">
+          <div class="cl-icon" style="font-size:.75rem;font-weight:700">in</div>
+          <div><div class="cl-label">LinkedIn</div><div style="font-size:.85rem">linkedin.com/in/syedhamzaali</div></div>
+          <span class="cl-arr">→</span>
+        </a>
+        <a href="https://github.com" class="c-link-row" target="_blank">
+          <div class="cl-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div><div class="cl-label">GitHub</div><div style="font-size:.85rem">github.com/syedhamzaali</div></div>
+          <span class="cl-arr">→</span>
+        </a>
+      </div>
+    </div>
+    <div class="reveal rv2">
+      <div class="contact-form">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="form-submit"><span>Send Message →</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">SHA_DEV</div>
+  <div class="footer-copy">© 2025 Syed Hamza Ali · Flutter Developer</div>
+  <a href="#hero" class="footer-back">↑ Back to top</a>
+</footer>
+
+<script>
+/* STARFIELD */
+(function(){
+  const c=document.getElementById('starfield'),ctx=c.getContext('2d');
+  let W,H,stars=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();
+  window.addEventListener('resize',()=>{resize();init()});
+  function mkStar(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.2,t:Math.random()*Math.PI*2,s:Math.random()*.04+.01}}
+  function init(){stars=[];for(let i=0;i<200;i++)stars.push(mkStar())}
+  init();
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.t+=s.s;
+      const a=.15+.45*Math.abs(Math.sin(s.t));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,212,255,${a})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* CURSOR */
+const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=mx-4+'px';dot.style.top=my-4+'px';
+});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx-20+'px';ring.style.top=ry-20+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.skill-tile,.chip,.proj-row,.c-link-row').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{dot.classList.add('hov');ring.classList.add('hov')});
+  el.addEventListener('mouseleave',()=>{dot.classList.remove('hov');ring.classList.remove('hov')});
+});
+
+/* SCROLL REVEAL */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      e.target.querySelectorAll('.hud-bar-fill').forEach(b=>b.style.transform=`scaleX(${b.dataset.w/100})`);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(r=>revObs.observe(r));
+
+/* BAR ANIMATION for profile-hud */
+new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.hud-bar-fill').forEach((b,i)=>setTimeout(()=>b.style.transform=`scaleX(${b.dataset.w/100})`,500+i*120));
+    }
+  });
+},{threshold:.3}).observe(document.querySelector('.profile-hud'));
+
+/* COUNTER */
+const cObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target,tgt=parseInt(el.dataset.target),dur=1600;
+      let start=null;
+      (function step(ts){if(!start)start=ts;const p=Math.min((ts-start)/dur,1),ease=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;el.textContent=Math.round(ease*tgt);if(p<1)requestAnimationFrame(step)})(performance.now());
+      cObs.unobserve(el);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.counter').forEach(c=>cObs.observe(c));
+
+/* NAV ACTIVE */
+const secs=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id});
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
+
+/* PARALLAX ORBS */
+document.addEventListener('mousemove',e=>{
+  const x=(e.clientX/window.innerWidth-.5)*40,y=(e.clientY/window.innerHeight-.5)*40;
+  document.querySelectorAll('.hero-orb').forEach((o,i)=>{const f=(i+1)*.5;o.style.transform=`translate(${x*f}px,${y*f}px)`});
+});
+</script>
+</body>
+</html>
