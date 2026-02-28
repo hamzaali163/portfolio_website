@@ -29,7 +29,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 #starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
 
 /* OVERLAYS */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:200}
+body::after{content:none}
 .grid-ovl{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:80px 80px}
 .grid-ovl::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(0,212,255,.06) 0%,transparent 70%)}
 
@@ -213,6 +213,50 @@ section{position:relative;z-index:1;padding:120px 60px}
 .hc1{top:24px;right:24px}
 .hc2{bottom:24px;left:24px}
 
+/* CALCUT BANNER */
+.calcut-visual{min-height:430px}
+.calcut-banner{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;width:min(92%,620px)}
+.calcut-phone{width:150px;height:300px;border-radius:24px;background:var(--bg);border:1px solid rgba(255,255,255,.15);box-shadow:0 22px 44px rgba(0,0,0,.45);padding:6px;position:relative;overflow:hidden}
+.calcut-phone::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:56px;height:6px;border-radius:999px;background:rgba(12,10,28,.2)}
+.calcut-phone::after{content:'';position:absolute;inset:0;border-radius:28px;box-shadow:inset 0 1px 0 rgba(255,255,255,.9);pointer-events:none}
+.calcut-phone.main{width:170px;height:340px;z-index:3}
+.calcut-phone.left{z-index:2}
+.calcut-phone.right{z-index:1}
+.calcut-screen{height:100%;border-radius:18px;background:var(--surface);padding:14px;color:#101126;font-family:'Space Grotesk',sans-serif;position:relative}
+.calcut-screen.media{padding:0;overflow:hidden;background:#f6f7fb}
+.calcut-shot{width:100%;height:100%;object-fit:cover;object-position:center}
+.calcut-visual .vis-grid{opacity:.35}
+.facemax-visual .vis-grid{opacity:.35}
+.facemax-hero-wrap{position:relative;z-index:2;width:min(94%,760px)}
+.facemax-hero-image{display:block;width:100%;height:auto;border-radius:16px;border:1px solid rgba(0,212,255,.18);box-shadow:0 28px 70px rgba(0,0,0,.45)}
+.calcut-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.calcut-logo{font-weight:700;font-size:1rem}
+.calcut-chip{font-family:'JetBrains Mono',monospace;font-size:.55rem;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid rgba(16,17,38,.12)}
+.calcut-kpi{background:#fff;border:1px solid rgba(16,17,38,.1);border-radius:14px;padding:10px;margin-bottom:10px}
+.calcut-kpi b{display:block;font-size:2rem;line-height:1}
+.calcut-kpi span{font-size:.72rem;color:#505774}
+.calcut-macros{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.calcut-macros div{background:#fff;border:1px solid rgba(16,17,38,.1);border-radius:10px;padding:8px}
+.calcut-macros b{display:block;font-size:.95rem}
+.calcut-macros span{font-size:.58rem;color:#596181}
+.calcut-list{display:grid;gap:6px}
+.calcut-list div{height:9px;border-radius:6px;background:#fff;border:1px solid rgba(16,17,38,.08)}
+.calcut-goals{display:grid;gap:8px}
+.calcut-goals .row{height:10px;border-radius:999px;background:#fff;overflow:hidden;border:1px solid rgba(16,17,38,.12);position:relative}
+.calcut-goals .row i{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+.calcut-goals .r1 i{width:68%;background:#1a102e}
+.calcut-goals .r2 i{width:54%;background:#d4786f}
+.calcut-goals .r3 i{width:63%;background:#dca06d}
+.calcut-goals .r4 i{width:49%;background:#6c99e7}
+.calcut-ring{width:86px;height:86px;border-radius:50%;margin:8px auto 10px;border:10px solid rgba(16,17,38,.1);border-top-color:#d4786f;border-right-color:#dca06d;border-bottom-color:#6c99e7}
+.calcut-cta{margin-top:auto;background:#160427;color:#fff;border-radius:999px;padding:10px 12px;text-align:center;font-weight:600;font-size:.8rem}
+.calcut-exercise{display:grid;gap:8px}
+.calcut-exercise .item{background:#fff;border:1px solid rgba(16,17,38,.12);border-radius:12px;padding:9px}
+.calcut-exercise .item b{display:block;font-size:.86rem}
+.calcut-exercise .item span{font-size:.58rem;color:#596181}
+.calcut-pills{display:flex;gap:6px;flex-wrap:wrap}
+.calcut-pills span{font-size:.58rem;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid rgba(16,17,38,.12);font-family:'JetBrains Mono',monospace}
+
 /* CONTACT */
 #contact{background:var(--bg)}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
@@ -267,6 +311,9 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
   .proj-row,.proj-row:nth-child(even){grid-template-columns:1fr}
   .proj-row:nth-child(even) .proj-vis{order:0}
   .proj-info{padding:32px 28px;border-right:none!important;border-left:none!important;border-bottom:1px solid var(--border)}
+  .calcut-banner{gap:10px;width:100%}
+  .calcut-phone{width:124px;height:248px}
+  .calcut-phone.main{width:140px;height:280px}
   .contact-grid{grid-template-columns:1fr}
   footer{flex-direction:column;gap:14px;text-align:center;padding:24px}
 }
@@ -492,39 +539,42 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
     <div class="proj-row reveal">
       <div class="proj-info">
         <div class="proj-num">PROJECT <span>01</span> / 03</div>
-        <div class="proj-title">E-Commerce Platform</div>
-        <p class="proj-desc">A full-featured shopping app with real-time cart sync, Firebase Auth, Stripe payments, custom animations, and an offline-first architecture. Featured on the Play Store with 50K+ downloads.</p>
+        <div class="proj-title">CalCut - AI Calorie Counter</div>
+        <p class="proj-desc">An AI-powered calorie and nutrition tracking app that helps users log meals, monitor macros, adjust goals, and track exercise through a clean, guided mobile experience.</p>
         <div class="proj-tech">
           <span class="tech-tag">Flutter</span>
-          <span class="tech-tag">Firebase</span>
-          <span class="tech-tag">BLoC</span>
-          <span class="tech-tag">Stripe</span>
-          <span class="tech-tag">Hive</span>
+          <span class="tech-tag">AI Nutrition Scan</span>
+          <span class="tech-tag">Macro Tracking</span>
+          <span class="tech-tag">Exercise Logging</span>
+          <span class="tech-tag">Goal Planning</span>
         </div>
         <div class="proj-actions">
-          <a href="#" class="proj-link primary">Live App →</a>
-          <a href="#" class="proj-link secondary">View Code →</a>
+          <a href="https://play.google.com/store/apps/details?id=com.itechgemini.cal_ai&amp;hl=en" class="proj-link primary" target="_blank">Live App →</a>
+          <a href="https://play.google.com/store/apps/details?id=com.itechgemini.cal_ai&amp;hl=en" class="proj-link secondary" target="_blank">View Listing →</a>
         </div>
       </div>
-      <div class="proj-vis">
+      <div class="proj-vis calcut-visual">
         <div class="vis-bg" style="background:linear-gradient(135deg,#040414,#0f0830)"></div>
         <div class="vis-grid"></div>
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen" style="background:#0a0820">
-            <div class="ps-bar" style="background:#120f35"><i></i><i></i><i></i></div>
-            <div class="ps-content">
-              <div class="ps-row a"></div>
-              <div class="ps-row c"></div>
-              <div class="ps-img" style="background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(0,212,255,.15))"></div>
-              <div class="ps-row"></div>
-              <div class="ps-row c"></div>
-              <div class="ps-btn"></div>
+        <div class="calcut-banner">
+          <div class="calcut-phone left">
+            <div class="calcut-screen media">
+              <img src="assets/calcut/calcut-2.png" alt="CalCut goal planning screen" class="calcut-shot">
+            </div>
+          </div>
+          <div class="calcut-phone main">
+            <div class="calcut-screen media">
+              <img src="assets/calcut/calcut-1.png" alt="CalCut dashboard screen" class="calcut-shot">
+            </div>
+          </div>
+          <div class="calcut-phone right">
+            <div class="calcut-screen media">
+              <img src="assets/calcut/calcut-3.png" alt="CalCut exercise screen" class="calcut-shot">
             </div>
           </div>
         </div>
-        <div class="hud-chip hc1">50K+ Downloads</div>
-        <div class="hud-chip hc2">60fps · Offline-first</div>
+        <div class="hud-chip hc1">AI Calorie Counter</div>
+        <div class="hud-chip hc2">Macros · Goals · Exercise</div>
       </div>
     </div>
 
@@ -532,45 +582,28 @@ footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid va
     <div class="proj-row reveal rv1">
       <div class="proj-info">
         <div class="proj-num">PROJECT <span>02</span> / 03</div>
-        <div class="proj-title">Health &amp; Fitness Tracker</div>
-        <p class="proj-desc">A daily health metrics app featuring custom chart widgets built with CustomPainter, local notifications, Riverpod state management, and a powerful dark UI design system. Featured by Google.</p>
+        <div class="proj-title">FacialMax - AI Face Analyzer</div>
+        <p class="proj-desc">An AI face analysis app that provides detailed beauty insights, facial scoring, and personalized enhancement suggestions through a polished mobile-first experience.</p>
         <div class="proj-tech">
           <span class="tech-tag">Flutter</span>
-          <span class="tech-tag">Riverpod</span>
-          <span class="tech-tag">CustomPainter</span>
-          <span class="tech-tag">SQLite</span>
-          <span class="tech-tag">FCM</span>
+          <span class="tech-tag">AI Face Analysis</span>
+          <span class="tech-tag">Beauty Scoring</span>
+          <span class="tech-tag">Image Processing</span>
+          <span class="tech-tag">Guided Insights</span>
         </div>
         <div class="proj-actions">
-          <a href="#" class="proj-link primary">Live App →</a>
-          <a href="#" class="proj-link secondary">View Code →</a>
+          <a href="https://play.google.com/store/apps/details?id=com.itechgemini.facemax&amp;pcampaignid=web_share" class="proj-link primary" target="_blank">Live App →</a>
+          <a href="https://play.google.com/store/apps/details?id=com.itechgemini.facemax&amp;pcampaignid=web_share" class="proj-link secondary" target="_blank">View Listing →</a>
         </div>
       </div>
-      <div class="proj-vis">
-        <div class="vis-bg" style="background:linear-gradient(135deg,#040d14,#001825)"></div>
+      <div class="proj-vis facemax-visual">
+        <div class="vis-bg" style="background:linear-gradient(135deg,#040414,#0f0830)"></div>
         <div class="vis-grid"></div>
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen" style="background:#040d14">
-            <div class="ps-bar" style="background:#061520"><i></i><i></i><i></i></div>
-            <div class="ps-content">
-              <div class="ps-row" style="background:rgba(0,212,255,.3);width:80%"></div>
-              <div class="ps-img" style="background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(0,255,136,.1));display:flex;align-items:flex-end;padding:6px">
-                <div style="display:flex;align-items:flex-end;gap:4px;width:100%">
-                  <div style="flex:1;height:30px;background:rgba(0,212,255,.25);border-radius:2px 2px 0 0"></div>
-                  <div style="flex:1;height:40px;background:rgba(0,212,255,.4);border-radius:2px 2px 0 0"></div>
-                  <div style="flex:1;height:25px;background:rgba(0,212,255,.2);border-radius:2px 2px 0 0"></div>
-                  <div style="flex:1;height:45px;background:rgba(0,255,136,.5);border-radius:2px 2px 0 0"></div>
-                  <div style="flex:1;height:35px;background:rgba(0,212,255,.3);border-radius:2px 2px 0 0"></div>
-                </div>
-              </div>
-              <div class="ps-row c"></div>
-              <div class="ps-row"></div>
-            </div>
-          </div>
+        <div class="facemax-hero-wrap">
+          <img src="assets/facialmax-hero.png" alt="FacialMax app hero banner" class="facemax-hero-image">
         </div>
-        <div class="hud-chip hc1">Featured by Google</div>
-        <div class="hud-chip hc2">Custom Chart Widgets</div>
+        <div class="hud-chip hc1">AI Face Analyzer</div>
+        <div class="hud-chip hc2">Face Score · Insights</div>
       </div>
     </div>
 
